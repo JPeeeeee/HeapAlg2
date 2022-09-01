@@ -92,9 +92,23 @@ void cadastrarPaciente(pacientes vetor[], int *tam){
     *tam += 1;
 }
 
-void alteraHeap(pacientes vetor[]){
-    int i;
-    
+void alteraHeap(pacientes vetor[], int tam){
+    int chave, i, prioridade; 
+    printf("Insira a senha do paciente:");
+    scanf("%d", &chave);
+
+    for (i = 0; i < tam; i++){
+        if (chave == vetor[i].senha){
+            printf("Qual eh a nova prioridade do paciente?\n");
+            scanf("%d", &prioridade);
+            vetor[i].prioridade = prioridade;
+            printf("==========================================\n");
+            printf("  Prioridade do paciente %s modificada!\n", vetor[i].nome);
+            printf("==========================================\n");
+            break;
+        }
+    }
+    heapify(vetor, tam);
 }
 
 int main(){
@@ -136,7 +150,10 @@ int main(){
                 break;
             case (3):
                 printf("========================================================\n");
-                printf("                      Sala de espera\n");
+                if (tam == 0)
+                    printf("                  Sala de espera vazia!\n");
+                else
+                    printf("                      Sala de espera\n");
                 printf("========================================================\n");
                 imprime(paciente, tam);
                 res = 1;
@@ -146,7 +163,10 @@ int main(){
                 res = 1;
                 break;
             case (5):
-                alteraHeap(paciente);
+                printf("===========================\n");
+                printf("  Alterando prioridades:\n");
+                printf("===========================\n");
+                alteraHeap(paciente, tam);
                 res = 1;
                 break;
             case (6):
