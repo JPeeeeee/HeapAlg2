@@ -102,13 +102,27 @@ void alteraHeap(pacientes vetor[], int tam){
             printf("Qual eh a nova prioridade do paciente?\n");
             scanf("%d", &prioridade);
             vetor[i].prioridade = prioridade;
-            printf("==========================================\n");
-            printf("  Prioridade do paciente %s modificada!\n", vetor[i].nome);
-            printf("==========================================\n");
+            printf("========================================================\n");
+            printf("   Prioridade do paciente %s modificada!\n", vetor[i].nome);
+            printf("========================================================\n");
             break;
         }
     }
     heapify(vetor, tam);
+}
+
+void troca(pacientes *a, pacientes *b){
+    pacientes aux;
+    aux = *a;
+    *a = *b;
+    *b = aux;
+}
+
+void heapSort(pacientes vetor[], int tam) {
+    for (int i = tam - 1; i > 0; i--) {
+      troca(&vetor[0], &vetor[i]);
+      heapify(vetor, i);
+    }
 }
 
 int main(){
@@ -121,11 +135,17 @@ int main(){
     int escolha;
     int res = 1;
     while(res){
-        printf("O que voce deseja fazer?\n\n1. Cadastrar paciente\n2. Chamar proximo paciente\n3. Mostrar sala de espera\n4. Ordenar prioridades\n5. Alterar Prioridade\n6. Sair\n");
+        printf("O que voce deseja fazer?\n\n1. Cadastrar paciente\n2. Chamar proximo paciente\n3. Mostrar sala de espera\n4. Ordenar prioridades\n5. Transformar fila em Heap\n6. Alterar prioridades\n7. Encher fila\n8. Sair\n");
         scanf("%d", &escolha);
 
         switch(escolha){
             case (1): 
+                if (tam == 20){
+                    printf("========================================================\n");
+                    printf("                   A UPA está lotada!\n");
+                    printf("========================================================\n");
+                    break;
+                }
                 cadastrarPaciente(paciente, &tam);
                 printf("===========================\n");
                 imprime(paciente, tam);
@@ -156,20 +176,64 @@ int main(){
                     printf("                      Sala de espera\n");
                 printf("========================================================\n");
                 imprime(paciente, tam);
+                if (tam == 0)
+                    printf("      Sala de espera vazia!\n");
+                else
+                    printf("      Sala de espera\n");
+                printf("===========================\n");
                 res = 1;
                 break;
             case (4):
-                /*heapSort();*/
+                heapSort(paciente, tam);
+                printf("===========================\n");
+                printf("    Pacientes ordenados!\n");
+                printf("===========================\n");
+                imprime(paciente, tam);
+                printf("    Pacientes ordenados!\n");
+                printf("===========================\n");
                 res = 1;
                 break;
             case (5):
+                heapify(paciente, tam);
+                printf("===========================\n");
+                if (ehHeap(paciente, tam))
+                    printf("Fila de pacientes transformada em heap!\n");
+                else    
+                    printf("Erro!\n");
+                printf("===========================\n");
+                imprime(paciente, tam);
+                if (ehHeap(paciente, tam))
+                    printf("Fila de pacientes transformada em heap!\n");
+                else    
+                    printf("Erro!\n");
+                printf("===========================\n");
+                break;
+            case (6):
                 printf("===========================\n");
                 printf("  Alterando prioridades:\n");
                 printf("===========================\n");
                 alteraHeap(paciente, tam);
                 res = 1;
                 break;
-            case (6):
+            case (7):
+                printf("===========================\n");
+                printf("Chamando pessoas para encher a fila...\n");
+                printf("===========================\n");
+                int i;
+                for (i = tam; i < 20; i++){
+                    strcpy(paciente[i].nome, nomes[rand() % 20]);
+                    paciente[i].prioridade = rand() % 20;
+                    paciente[i].senha = i + 1;
+                    tam++;
+                }
+                printf("Fila Cheia!\n");
+                printf("===========================\n");
+                imprime(paciente, tam);
+                printf("Lembre-se de transformar a fila em Heap\n para garantir a ordem de prioridade!\n");
+                printf("===========================\n");
+                res = 1;
+                break;
+            case (8):
                 res = 0;
                 break;
             default:
